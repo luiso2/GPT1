@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { widgetGenerators } from "./widgets/generators.js";
+import { markdownGenerators } from "./widgets/markdown-generators.js";
 import { getOpenAPISchema } from "./config/openapi.js";
 
 const app = express();
@@ -64,8 +65,14 @@ app.post("/api/widget/dashboard", (req, res) => {
       });
     }
 
-    const html = widgetGenerators.dashboard(title, metrics, theme);
-    res.json({ success: true, html });
+    // Generar markdown para ChatGPT
+    const markdown = markdownGenerators.dashboard(title, metrics);
+
+    res.json({
+      success: true,
+      content: markdown,
+      type: "markdown"
+    });
   } catch (error) {
     res.status(500).json({
       error: "Internal Server Error",
@@ -86,8 +93,14 @@ app.post("/api/widget/chart", (req, res) => {
       });
     }
 
-    const html = widgetGenerators.chart(title, type, data, labels);
-    res.json({ success: true, html });
+    // Generar markdown para ChatGPT
+    const markdown = markdownGenerators.chart(title, type, data, labels);
+
+    res.json({
+      success: true,
+      content: markdown,
+      type: "markdown"
+    });
   } catch (error) {
     res.status(500).json({
       error: "Internal Server Error",
@@ -108,8 +121,14 @@ app.post("/api/widget/table", (req, res) => {
       });
     }
 
-    const html = widgetGenerators.table(title, headers, rows, sortable);
-    res.json({ success: true, html });
+    // Generar markdown para ChatGPT
+    const markdown = markdownGenerators.table(title, headers, rows);
+
+    res.json({
+      success: true,
+      content: markdown,
+      type: "markdown"
+    });
   } catch (error) {
     res.status(500).json({
       error: "Internal Server Error",
@@ -130,8 +149,14 @@ app.post("/api/widget/timeline", (req, res) => {
       });
     }
 
-    const html = widgetGenerators.timeline(title, events);
-    res.json({ success: true, html });
+    // Generar markdown para ChatGPT
+    const markdown = markdownGenerators.timeline(title, events);
+
+    res.json({
+      success: true,
+      content: markdown,
+      type: "markdown"
+    });
   } catch (error) {
     res.status(500).json({
       error: "Internal Server Error",
@@ -152,8 +177,14 @@ app.post("/api/widget/comparison", (req, res) => {
       });
     }
 
-    const html = widgetGenerators.comparison(title, items);
-    res.json({ success: true, html });
+    // Generar markdown para ChatGPT
+    const markdown = markdownGenerators.comparison(title, items);
+
+    res.json({
+      success: true,
+      content: markdown,
+      type: "markdown"
+    });
   } catch (error) {
     res.status(500).json({
       error: "Internal Server Error",
