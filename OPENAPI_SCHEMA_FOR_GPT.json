@@ -1,0 +1,118 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ChatGPT Widget API",
+    "version": "1.0.0",
+    "description": "API para generar widgets HTML configurables. Permite crear dashboards, tarjetas de métricas y otros componentes visuales."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local (Cambiar a tu URL de producción)"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Widget": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa"
+          },
+          "html": {
+            "type": "string",
+            "description": "Código HTML del widget generado"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/widget/generate": {
+      "get": {
+        "operationId": "generateWidget",
+        "summary": "Generar widget HTML",
+        "description": "Genera un widget HTML completamente estilizado con Tailwind CSS",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Tipo de widget a generar",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "dashboard",
+              "enum": ["dashboard", "metrics", "stats"]
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Título del widget",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Widget"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Widget generado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Widget"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API key no proporcionada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "API key inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
