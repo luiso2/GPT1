@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 // Frontend URL for widget links
 const FRONTEND_URL = process.env.FRONTEND_URL ||
-                     (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : "http://localhost:3001");
+                     "https://frontend-production-d329.up.railway.app";
 
 // In-memory widget storage (in production, use Redis or DB)
 const widgetStore = new Map();
@@ -80,10 +80,52 @@ app.get("/health", (req, res) => {
 });
 
 // ============================================
-// WIDGET RETRIEVAL ENDPOINT
+// WIDGET RETRIEVAL ENDPOINTS
 // ============================================
 
-// Get widget data by ID
+// Get widget data by ID (primary endpoint)
+app.get("/api/widget/data/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(`📥 Fetching widget data for ID: ${id}`);
+
+    const widget = widgetStore.get(id);
+
+    if (!widget) {
+      console.log(`⚠️ Widget not found: ${id}`);
+      return res.status(404).json({
+        success: false,
+        error: "Widget not found",
+        message: `No widget found with ID: ${id}`
+      });
+    }
+
+    console.log(`✅ Widget found: ${id} (type: ${widget.type})`);
+
+    // Merge type into data for consistent structure
+    const widgetData = {
+      ...widget.data,
+      type: widget.type
+    };
+
+    res.json({
+      success: true,
+      widget: widgetData,
+      widgetId: id,
+      type: widget.type,
+      createdAt: widget.createdAt
+    });
+  } catch (error) {
+    console.error(`❌ Error fetching widget ${req.params.id}:`, error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+      message: error.message
+    });
+  }
+});
+
+// Alternative endpoint for backwards compatibility
 app.get("/api/widgets/:id", (req, res) => {
   try {
     const { id } = req.params;
@@ -97,9 +139,16 @@ app.get("/api/widgets/:id", (req, res) => {
       });
     }
 
+    // Merge type into data for consistent structure
+    const widgetData = {
+      ...widget.data,
+      type: widget.type
+    };
+
     res.json({
       success: true,
-      widget: widget.data,
+      widget: widgetData,
+      data: widgetData, // Alternative property name
       type: widget.type,
       createdAt: widget.createdAt
     });
