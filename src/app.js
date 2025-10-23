@@ -23,7 +23,9 @@ const widgetStore = new Map();
 
 // Helper to generate widget URL
 const generateWidgetURL = (widgetType, widgetId, data) => {
-  widgetStore.set(widgetId, { type: widgetType, data, createdAt: new Date() });
+  // Include type in the data object for frontend compatibility
+  const widgetData = { ...data, type: widgetType };
+  widgetStore.set(widgetId, { type: widgetType, data: widgetData, createdAt: new Date() });
   return `${FRONTEND_URL}/widgets/${widgetType}?id=${widgetId}`;
 };
 
@@ -213,7 +215,8 @@ app.post("/api/widget/chart", (req, res) => {
 
     // Generate unique ID and widget URL
     const widgetId = crypto.randomBytes(8).toString("hex");
-    const widgetUrl = generateWidgetURL("chart", widgetId, { title, type, data, labels });
+    // Rename 'type' to 'chartType' to avoid conflict with widget type
+    const widgetUrl = generateWidgetURL("chart", widgetId, { title, chartType: type, data, labels });
 
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.chart(title, type, data, labels);
