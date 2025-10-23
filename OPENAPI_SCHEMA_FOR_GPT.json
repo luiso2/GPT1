@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "Servidor local (Cambiar a tu URL de producción)"
+      "url": "https://gpt-widget-production.up.railway.app",
+      "description": "Servidor de producción en Railway"
     }
   ],
   "components": {
