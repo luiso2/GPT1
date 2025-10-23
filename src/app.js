@@ -3,6 +3,12 @@ import cors from "cors";
 import { widgetGenerators } from "./widgets/generators.js";
 import { markdownGenerators } from "./widgets/markdown-generators.js";
 import { getOpenAPISchema } from "./config/openapi.js";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -339,6 +345,14 @@ app.post("/api/widget/activity", (req, res) => {
 // ============================================
 
 app.get("/openapi.json", (req, res) => {
+  // Use simplified schema with only 5 widgets
+  const schemaPath = join(__dirname, "config", "openapi-simple.json");
+  const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
+  res.json(schema);
+});
+
+// Full schema endpoint (14 widgets) - for reference
+app.get("/openapi-full.json", (req, res) => {
   const baseUrl = process.env.BASE_URL ||
                   process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` :
                   `http://localhost:${PORT}`;

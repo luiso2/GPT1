@@ -1,0 +1,328 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ChatGPT Dynamic Widgets API",
+    "version": "1.0.0",
+    "description": "API para generar widgets dinámicos en markdown. Solo incluye los 5 widgets originales que funcionaban correctamente."
+  },
+  "servers": [
+    {
+      "url": "https://gpt-widget-production.up.railway.app",
+      "description": "Servidor de producción en Railway"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "checkHealth",
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/widget/dashboard": {
+      "post": {
+        "operationId": "createDashboard",
+        "summary": "Crear dashboard de métricas",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "metrics"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Dashboard Ventas"
+                  },
+                  "metrics": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "$45,678"
+                        },
+                        "label": {
+                          "type": "string",
+                          "example": "Ingresos"
+                        },
+                        "color": {
+                          "type": "string",
+                          "example": "text-blue-600"
+                        },
+                        "change": {
+                          "type": "string",
+                          "example": "+12%"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dashboard creado"
+          }
+        }
+      }
+    },
+    "/api/widget/chart": {
+      "post": {
+        "operationId": "createChart",
+        "summary": "Crear gráfico",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "type",
+                  "data",
+                  "labels"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Ventas Mensuales"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "bar",
+                      "line",
+                      "pie",
+                      "doughnut"
+                    ],
+                    "example": "bar"
+                  },
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      12,
+                      19,
+                      3,
+                      5,
+                      2,
+                      3
+                    ]
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Ene",
+                      "Feb",
+                      "Mar",
+                      "Abr",
+                      "May",
+                      "Jun"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gráfico creado"
+          }
+        }
+      }
+    },
+    "/api/widget/table": {
+      "post": {
+        "operationId": "createTable",
+        "summary": "Crear tabla",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "headers",
+                  "rows"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Top 10 Clientes"
+                  },
+                  "headers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Cliente",
+                      "Ventas",
+                      "Estado"
+                    ]
+                  },
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "example": [
+                      [
+                        "Acme",
+                        "$45k",
+                        "Activo"
+                      ]
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tabla creada"
+          }
+        }
+      }
+    },
+    "/api/widget/timeline": {
+      "post": {
+        "operationId": "createTimeline",
+        "summary": "Crear timeline",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "events"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Historia del Proyecto"
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "example": "15 Ene 2025"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "Lanzamiento"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Beta lanzada"
+                        },
+                        "color": {
+                          "type": "string",
+                          "example": "blue"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Timeline creado"
+          }
+        }
+      }
+    },
+    "/api/widget/comparison": {
+      "post": {
+        "operationId": "createComparison",
+        "summary": "Crear comparación",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "items"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Comparación de Planes"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "Plan Pro"
+                        },
+                        "price": {
+                          "type": "string",
+                          "example": "$99/mes"
+                        },
+                        "features": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "Feature 1",
+                            "Feature 2"
+                          ]
+                        },
+                        "highlight": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comparación creada"
+          }
+        }
+      }
+    }
+  }
+}
