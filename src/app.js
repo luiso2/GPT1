@@ -188,10 +188,12 @@ app.post("/api/widget/dashboard", (req, res) => {
 
     res.json({
       success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "dashboard",  // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
       content: markdown,
       widgetUrl: widgetUrl,
-      widgetId: widgetId,
-      type: "markdown"
+      widgetId: widgetId
     });
   } catch (error) {
     res.status(500).json({
@@ -223,10 +225,12 @@ app.post("/api/widget/chart", (req, res) => {
 
     res.json({
       success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "chart",      // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
       content: markdown,
       widgetUrl: widgetUrl,
-      widgetId: widgetId,
-      type: "markdown"
+      widgetId: widgetId
     });
   } catch (error) {
     res.status(500).json({
@@ -257,10 +261,12 @@ app.post("/api/widget/table", (req, res) => {
 
     res.json({
       success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "table",      // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
       content: markdown,
       widgetUrl: widgetUrl,
-      widgetId: widgetId,
-      type: "markdown"
+      widgetId: widgetId
     });
   } catch (error) {
     res.status(500).json({
@@ -291,10 +297,12 @@ app.post("/api/widget/timeline", (req, res) => {
 
     res.json({
       success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "timeline",   // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
       content: markdown,
       widgetUrl: widgetUrl,
-      widgetId: widgetId,
-      type: "markdown"
+      widgetId: widgetId
     });
   } catch (error) {
     res.status(500).json({
@@ -325,10 +333,12 @@ app.post("/api/widget/comparison", (req, res) => {
 
     res.json({
       success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "comparison", // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
       content: markdown,
       widgetUrl: widgetUrl,
-      widgetId: widgetId,
-      type: "markdown"
+      widgetId: widgetId
     });
   } catch (error) {
     res.status(500).json({
@@ -350,8 +360,21 @@ app.post("/api/widget/tree", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("tree", widgetId, { title, data, variant });
+
     const markdown = markdownGenerators.tree(title, data, variant);
-    res.json({ success: true, content: markdown, type: "markdown" });
+
+    res.json({
+      success: true,
+      url: widgetUrl,     // OpenAPI schema expects 'url' not 'widgetUrl'
+      type: "tree",       // OpenAPI schema expects widget type not "markdown"
+      // Additional fields for backwards compatibility (not in schema)
+      content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
