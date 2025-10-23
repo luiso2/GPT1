@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
       table: "/api/widget/table",
       timeline: "/api/widget/timeline",
       comparison: "/api/widget/comparison",
+      tree: "/api/widget/tree",
       openapi: "/openapi.json"
     },
     widgets: [
@@ -34,7 +35,16 @@ app.get("/", (req, res) => {
       "Chart - Gráficos interactivos",
       "Table - Tablas de datos",
       "Timeline - Líneas de tiempo",
-      "Comparison - Comparaciones"
+      "Comparison - Comparaciones",
+      "Tree - Estructuras jerárquicas",
+      "Stats - Tarjetas de estadísticas",
+      "Progress - Barras de progreso",
+      "Kanban - Tableros tipo Trello",
+      "Calendar - Calendario de eventos",
+      "Pricing - Cartas de precios",
+      "Gallery - Galería de imágenes",
+      "Notifications - Notificaciones",
+      "Activity - Feed de actividades"
     ],
     docs: "Ver README.md para instrucciones completas"
   });
@@ -193,6 +203,137 @@ app.post("/api/widget/comparison", (req, res) => {
   }
 });
 
+// Tree Widget
+app.post("/api/widget/tree", (req, res) => {
+  try {
+    const { title, data, variant = "premium" } = req.body;
+
+    if (!title || !data || !Array.isArray(data)) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Se requiere 'title' (string) y 'data' (array de nodos)"
+      });
+    }
+
+    const markdown = markdownGenerators.tree(title, data, variant);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Stats Cards Widget
+app.post("/api/widget/stats", (req, res) => {
+  try {
+    const { title, stats } = req.body;
+    if (!title || !stats || !Array.isArray(stats)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'stats' (array)" });
+    }
+    const markdown = markdownGenerators.stats(title, stats);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Progress Widget
+app.post("/api/widget/progress", (req, res) => {
+  try {
+    const { title, items } = req.body;
+    if (!title || !items || !Array.isArray(items)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' e 'items' (array)" });
+    }
+    const markdown = markdownGenerators.progress(title, items);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Kanban Widget
+app.post("/api/widget/kanban", (req, res) => {
+  try {
+    const { title, columns } = req.body;
+    if (!title || !columns || !Array.isArray(columns)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'columns' (array)" });
+    }
+    const markdown = markdownGenerators.kanban(title, columns);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Calendar Events Widget
+app.post("/api/widget/calendar", (req, res) => {
+  try {
+    const { title, events } = req.body;
+    if (!title || !events || !Array.isArray(events)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'events' (array)" });
+    }
+    const markdown = markdownGenerators.calendar(title, events);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Pricing Cards Widget
+app.post("/api/widget/pricing", (req, res) => {
+  try {
+    const { title, plans } = req.body;
+    if (!title || !plans || !Array.isArray(plans)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'plans' (array)" });
+    }
+    const markdown = markdownGenerators.pricing(title, plans);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Gallery Widget
+app.post("/api/widget/gallery", (req, res) => {
+  try {
+    const { title, items } = req.body;
+    if (!title || !items || !Array.isArray(items)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' e 'items' (array)" });
+    }
+    const markdown = markdownGenerators.gallery(title, items);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Notifications Widget
+app.post("/api/widget/notifications", (req, res) => {
+  try {
+    const { title, notifications } = req.body;
+    if (!title || !notifications || !Array.isArray(notifications)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'notifications' (array)" });
+    }
+    const markdown = markdownGenerators.notifications(title, notifications);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
+// Activity Feed Widget
+app.post("/api/widget/activity", (req, res) => {
+  try {
+    const { title, activities } = req.body;
+    if (!title || !activities || !Array.isArray(activities)) {
+      return res.status(400).json({ error: "Bad Request", message: "Se requiere 'title' y 'activities' (array)" });
+    }
+    const markdown = markdownGenerators.activity(title, activities);
+    res.json({ success: true, content: markdown, type: "markdown" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
+  }
+});
+
 // ============================================
 // OPENAPI SCHEMA
 // ============================================
@@ -232,12 +373,10 @@ app.listen(PORT, () => {
 ║  OpenAPI: /openapi.json                      ║
 ╚═══════════════════════════════════════════════╝
 
-📊 Widgets Disponibles:
-  • Dashboard - Panel de métricas
-  • Chart - Gráficos interactivos
-  • Table - Tablas de datos
-  • Timeline - Líneas de tiempo
-  • Comparison - Comparaciones
+📊 Widgets Disponibles (14 tipos):
+  • Dashboard, Chart, Table, Timeline, Comparison, Tree
+  • Stats, Progress, Kanban, Calendar, Pricing
+  • Gallery, Notifications, Activity Feed
 
 🤖 Configurar GPT:
   1. Importa: ${process.env.BASE_URL || `http://localhost:${PORT}`}/openapi.json
