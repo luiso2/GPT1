@@ -16,8 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 // Frontend URL for widget links
 const FRONTEND_URL = process.env.FRONTEND_URL ||
-                     process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` :
-                     "http://localhost:3001";
+                     (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : "http://localhost:3001");
 
 // In-memory widget storage (in production, use Redis or DB)
 const widgetStore = new Map();
