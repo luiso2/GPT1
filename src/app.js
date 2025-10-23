@@ -6,12 +6,27 @@ import { getOpenAPISchema } from "./config/openapi.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import crypto from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Frontend URL for widget links
+const FRONTEND_URL = process.env.FRONTEND_URL ||
+                     process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` :
+                     "http://localhost:3001";
+
+// In-memory widget storage (in production, use Redis or DB)
+const widgetStore = new Map();
+
+// Helper to generate widget URL
+const generateWidgetURL = (widgetType, widgetId, data) => {
+  widgetStore.set(widgetId, { type: widgetType, data, createdAt: new Date() });
+  return `${FRONTEND_URL}/widgets/${widgetType}?id=${widgetId}`;
+};
 
 // Middlewares
 app.use(cors({ origin: "*" }));
@@ -81,12 +96,18 @@ app.post("/api/widget/dashboard", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("dashboard", widgetId, { title, metrics, theme });
+
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.dashboard(title, metrics);
 
     res.json({
       success: true,
       content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId,
       type: "markdown"
     });
   } catch (error) {
@@ -109,12 +130,18 @@ app.post("/api/widget/chart", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("chart", widgetId, { title, type, data, labels });
+
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.chart(title, type, data, labels);
 
     res.json({
       success: true,
       content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId,
       type: "markdown"
     });
   } catch (error) {
@@ -137,12 +164,18 @@ app.post("/api/widget/table", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("table", widgetId, { title, headers, rows, sortable });
+
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.table(title, headers, rows);
 
     res.json({
       success: true,
       content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId,
       type: "markdown"
     });
   } catch (error) {
@@ -165,12 +198,18 @@ app.post("/api/widget/timeline", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("timeline", widgetId, { title, events });
+
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.timeline(title, events);
 
     res.json({
       success: true,
       content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId,
       type: "markdown"
     });
   } catch (error) {
@@ -193,12 +232,18 @@ app.post("/api/widget/comparison", (req, res) => {
       });
     }
 
+    // Generate unique ID and widget URL
+    const widgetId = crypto.randomBytes(8).toString("hex");
+    const widgetUrl = generateWidgetURL("comparison", widgetId, { title, items });
+
     // Generar markdown para ChatGPT
     const markdown = markdownGenerators.comparison(title, items);
 
     res.json({
       success: true,
       content: markdown,
+      widgetUrl: widgetUrl,
+      widgetId: widgetId,
       type: "markdown"
     });
   } catch (error) {
