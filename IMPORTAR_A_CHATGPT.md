@@ -27,26 +27,23 @@ https://gpt-widget-production.up.railway.app/openapi.json
 
 ### Paso 3: Verificar los Endpoints
 
-Deberías ver **14 actions** disponibles:
+Deberías ver **5 actions** disponibles:
 
-- ✅ createDashboard
-- ✅ createChart
-- ✅ createTable
-- ✅ createTimeline
-- ✅ createComparison
-- ✅ createTree
-- ✅ createStatsCards
-- ✅ createProgress
-- ✅ createKanban
-- ✅ createCalendar
-- ✅ createPricing
-- ✅ createGallery
-- ✅ createNotifications
-- ✅ createActivityFeed
+- ✅ createDashboard - Panel de métricas KPI
+- ✅ createChart - Gráficos (bar, line, pie, doughnut)
+- ✅ createTable - Tablas de datos
+- ✅ createTimeline - Líneas de tiempo
+- ✅ createComparison - Comparaciones lado a lado
 
 ### Paso 4: Agregar las Instrucciones al GPT
 
-Copia el contenido completo del archivo `GPT_INSTRUCTIONS_V2_COMPLETE.md` y pégalo en la sección **"Instructions"** de tu GPT.
+Usa las siguientes instrucciones para tu GPT (solo 5 widgets disponibles):
+
+**Dashboard**: Usa cuando el usuario pida "dashboard", "panel", "métricas", "resumen"
+**Chart**: Usa cuando pida "gráfico", "gráfica", "chart", "tendencias"
+**Table**: Usa cuando pida "tabla", "listado", "datos tabulares"
+**Timeline**: Usa cuando pida "timeline", "cronología", "historial", "eventos"
+**Comparison**: Usa cuando pida "comparar", "vs", "diferencias", "lado a lado"
 
 ---
 
@@ -56,10 +53,10 @@ Copia el contenido completo del archivo `GPT_INSTRUCTIONS_V2_COMPLETE.md` y pég
 
 **SIEMPRE importa desde**: `https://gpt-widget-production.up.railway.app/openapi.json`
 
-El endpoint dinámico `/openapi.json` siempre tiene:
-- ✅ Los 14 widgets actualizados
+El schema actual incluye solo los 5 widgets originales que funcionan correctamente:
+- ✅ Dashboard, Chart, Table, Timeline, Comparison
 - ✅ La URL correcta de Railway
-- ✅ Todos los parámetros correctos
+- ✅ Todos los parámetros validados y probados
 
 ---
 
