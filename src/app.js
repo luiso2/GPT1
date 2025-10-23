@@ -81,6 +81,39 @@ app.get("/health", (req, res) => {
 });
 
 // ============================================
+// WIDGET RETRIEVAL ENDPOINT
+// ============================================
+
+// Get widget data by ID
+app.get("/api/widgets/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const widget = widgetStore.get(id);
+
+    if (!widget) {
+      return res.status(404).json({
+        success: false,
+        error: "Widget not found",
+        message: `No widget found with ID: ${id}`
+      });
+    }
+
+    res.json({
+      success: true,
+      widget: widget.data,
+      type: widget.type,
+      createdAt: widget.createdAt
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+      message: error.message
+    });
+  }
+});
+
+// ============================================
 // WIDGET ENDPOINTS (SIN AUTENTICACIÓN PARA GPT)
 // ============================================
 
