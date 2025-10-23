@@ -1,8 +1,8 @@
 # 🤖 Cómo Importar el Schema OpenAPI a ChatGPT
 
-## ⚡ Método Recomendado: Usar el Endpoint Dinámico
+## ⚡ Método Recomendado: Usar el Endpoint Dinámico ⭐
 
-El backend genera automáticamente el schema OpenAPI con la URL correcta de Railway.
+**IMPORTANTE**: SIEMPRE usa el endpoint dinámico `/openapi.json` en lugar del archivo JSON estático. El backend genera automáticamente el schema actualizado con todos los 14 widgets funcionando.
 
 ### Paso 1: Ir a la configuración de tu GPT
 
@@ -50,15 +50,16 @@ Copia el contenido completo del archivo `GPT_INSTRUCTIONS_V2_COMPLETE.md` y pég
 
 ---
 
-## 📄 Método Alternativo: Copiar y Pegar el JSON
+## ⚠️ NO Usar el Archivo JSON Estático
 
-Si prefieres copiar y pegar manualmente:
+**NO uses** el archivo `OPENAPI_SCHEMA_FOR_GPT.json` directamente. Este archivo puede estar desactualizado.
 
-1. Abre: https://gpt-widget-production.up.railway.app/openapi.json
-2. Copia todo el JSON
-3. En ChatGPT GPT Editor → Actions → Create new action
-4. Pega el JSON completo en el campo **"Schema"**
-5. Click en **"Save"**
+**SIEMPRE importa desde**: `https://gpt-widget-production.up.railway.app/openapi.json`
+
+El endpoint dinámico `/openapi.json` siempre tiene:
+- ✅ Los 14 widgets actualizados
+- ✅ La URL correcta de Railway
+- ✅ Todos los parámetros correctos
 
 ---
 
